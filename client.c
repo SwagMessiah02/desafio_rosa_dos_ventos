@@ -127,7 +127,7 @@ static err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err) 
 // Função de callback para confirma o envio dos dados
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len) {
     printf("%d bytes foram enviados\n", len);
-    // tcp_close(tpcb);
+    // tcp_close(tpcb); - Não cometa o erro de chamar isso em uma função de callback
     return ERR_OK;
 }
 
