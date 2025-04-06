@@ -133,10 +133,6 @@ static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len) {
 void setup() {
     stdio_init_all();
 
-    gpio_init(BTA);
-    gpio_set_dir(BTA, GPIO_IN);
-    gpio_pull_up(BTA);
-
     adc_init();
     adc_gpio_init(26);
     adc_gpio_init(27);
