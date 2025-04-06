@@ -11,7 +11,6 @@
 #define WIFI_PASSWORD "<senha da rede>"
 #define SERVER_IP "<ip do dispositivo server>" 
 #define SERVER_PORT 5000 // Porta padrão 
-#define BTA 5
 
 struct tcp_pcb *client;
 
