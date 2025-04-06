@@ -7,11 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define WIFI_SSID "<nome da rede>"
-#define WIFI_PASSWORD "<senha da rede>"
-#define SERVER_IP "<ip do dispositivo server>" 
-#define SERVER_PORT 5000 // Porta padrão 
-#define BTA 5
+#define WIFI_SSID "Online_A1E4"
+#define WIFI_PASSWORD "0029966425"
+#define SERVER_IP "192.168.1.10" 
+#define SERVER_PORT 5000
 
 struct tcp_pcb *client;
 
@@ -88,7 +87,7 @@ void enviar_dados(struct Pos pos) {
     snprintf(buffer, sizeof(buffer), "%s\n", strcmp(posicao(pos), " ") == 0 ? " " : posicao(pos));
 
     // Envia os dados imediatamente ao servidor TCP
-    if (client && strcmp(buffer, " \n") != 0) {
+    if (strcmp(buffer, " \n") != 0) {
         err_t err = tcp_write(client, buffer, strlen(buffer), TCP_WRITE_FLAG_COPY);
 
         if(err != ERR_OK) {
@@ -98,7 +97,6 @@ void enviar_dados(struct Pos pos) {
         }
 
         if(tcp_output(client) != ERR_OK) {
-            printf("Erro ao tentar enviar dados\n");
             tcp_abort(client);
             return;
         }
