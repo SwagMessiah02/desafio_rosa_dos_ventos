@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define WIFI_SSID "Online_A1E4"
-#define WIFI_PASSWORD "0029966425"
-#define SERVER_IP "192.168.1.10" 
+#define WIFI_SSID 
+#define WIFI_PASSWORD 
+#define SERVER_IP 
 #define SERVER_PORT 5000
 
 struct tcp_pcb *client;
