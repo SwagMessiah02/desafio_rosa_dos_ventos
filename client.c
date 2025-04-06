@@ -22,6 +22,7 @@ struct Pos {
 
 static err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err);
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
+void enviar_dados(struct Pos pos);
 const char* posicao(struct Pos pos);
 void set_pos(struct Pos *pos);
 void setup();
@@ -71,18 +72,7 @@ int main() {
 
         struct Pos pos;
         set_pos(&pos);
-
-        // Armazena no buffer o conteúdo a ser enviado ao servido 
-        char buffer[64];
-        snprintf(buffer, sizeof(buffer), "%s\n", strcmp(posicao(pos), " ") == 0 ? " " : posicao(pos));
-
-        // Envia os dados imediatamente ao servidor TCP
-        if (client && strcmp(buffer, " \n") != 0) {
-            err_t err = tcp_write(client, buffer, strlen(buffer), TCP_WRITE_FLAG_COPY);
-            if(err != ERR_OK) {
-                tcp_output(client);
-            }
-        }
+        enviar_dados(pos);
 
         sleep_ms(250); 
     }
@@ -90,6 +80,29 @@ int main() {
     cyw43_arch_deinit();
 
     return 0;
+}
+
+void enviar_dados(struct Pos pos) {
+    // Armazena no buffer o conteúdo a ser enviado ao servido 
+    char buffer[64];
+    snprintf(buffer, sizeof(buffer), "%s\n", strcmp(posicao(pos), " ") == 0 ? " " : posicao(pos));
+
+    // Envia os dados imediatamente ao servidor TCP
+    if (client && strcmp(buffer, " \n") != 0) {
+        err_t err = tcp_write(client, buffer, strlen(buffer), TCP_WRITE_FLAG_COPY);
+
+        if(err != ERR_OK) {
+            printf("Erro ao tentar enfilheirar dados\n");
+            tcp_abort(client);
+            return;
+        }
+
+        if(tcp_output(client) != ERR_OK) {
+            printf("Erro ao tentar enviar dados\n");
+            tcp_abort(client);
+            return;
+        }
+    }
 }
 
 // Função de callback chamada quando uma conexão TCP for estabelecida com um servidor
@@ -114,7 +127,7 @@ static err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err) 
 // Função de callback para confirma o envio dos dados
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len) {
     printf("%d bytes foram enviados\n", len);
-
+    // tcp_close(tpcb);
     return ERR_OK;
 }
 
